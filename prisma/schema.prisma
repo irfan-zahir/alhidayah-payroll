@@ -1,0 +1,74 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+enum Role{
+  ADMIN
+  STAFF
+  SUPERADMIN
+}
+
+enum Months{
+  JANUARY
+  FEBRUARY
+  MARCH
+  APRIL
+  MAY
+  JUNE
+  JULY
+  AUGUST
+	SEPTEMBER
+  OCTOBER
+  NOVEMBER
+  DECEMBER
+}
+
+model Account {
+    id        String   @id @unique @default(cuid())
+
+    phone String
+    fid String @unique
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    profile Profile?
+    role Role
+}
+
+model Profile{
+  id String @id @default(cuid())
+
+  accountId String @unique
+  account Account? @relation(fields:[accountId], references:[id])
+  salary Salary[]
+}
+
+model Salary{
+  id Int @id @default(autoincrement())
+
+  basic Float
+  month Months
+
+  profileId String
+  profile Profile @relation(fields:[profileId], references:[id])
+  rates Rate[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Rate {
+  id Int @id @default(autoincrement())
+  name String
+  value Float
+
+  salaryId Int
+  salary Salary @relation(fields:[salaryId], references:[id])
+}
