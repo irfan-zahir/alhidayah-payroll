@@ -10,6 +10,12 @@ export const exampleRouter = createTRPCRouter({
       };
     }),
   getAll: publicProcedure.query(({ ctx }) => {
+<<<<<<< HEAD
     return {"hellooow":ctx};
+=======
+    return {
+      greeting: "hello trpc"
+    }
+>>>>>>> 5b45a2c16ae6e7498d71049f13c7c6bb5692be42
   }),
 });
