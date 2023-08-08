@@ -17,6 +17,7 @@
     "@trpc/next": "^10.26.0",
     "@trpc/react-query": "^10.26.0",
     "@trpc/server": "^10.26.0",
+    "axios": "^1.4.0",
     "firebase": "^10.1.0",
     "firebase-admin": "^11.10.1",
     "next": "^13.4.2",
