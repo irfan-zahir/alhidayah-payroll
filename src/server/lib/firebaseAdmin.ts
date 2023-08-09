@@ -3,11 +3,7 @@ import { getApps, initializeApp } from 'firebase-admin/app';
 
 import { env } from "~/env.mjs";
 
-const serviceAccount: admin.ServiceAccount = {
-    clientEmail: env.FIREBASE_ADMIN_CLIENTEMAIL,
-    projectId: env.FIREBASE_ADMIN_PROJECTID,
-    privateKey: env.FIREBASE_ADMIN_PRIVATEKEY
-}
+const serviceAccount: admin.ServiceAccount = JSON.parse(env.FIREBASE_ADMIN_SERVICE_ACCOUNT_KEY)
 
 if (!getApps().length) {
     initializeApp({

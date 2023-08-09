@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { auth } from '~/lib/firebase';
-import { onAuthStateChanged, User } from 'firebase/auth';
+import { onIdTokenChanged, User } from 'firebase/auth';
 import { api } from "~/server/apiClient";
 
 export const useUser = () => {
@@ -9,7 +9,7 @@ export const useUser = () => {
     const [isUserLoading, setIsUserLoading] = useState(true);
 
     useEffect(function getUser() {
-        const unsubscribe = onAuthStateChanged(auth, (updatedUser) => {
+        const unsubscribe = onIdTokenChanged(auth, (updatedUser) => {
             setIsUserLoading(false);
             setUser(updatedUser);
         });

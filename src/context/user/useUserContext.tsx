@@ -18,3 +18,6 @@ const UserProvider = ({ children }: Props) => {
             {children}
         </UserContextProvider>
     );
+}
+
+export { UserProvider, useUserContext };
