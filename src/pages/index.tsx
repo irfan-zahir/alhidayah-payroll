@@ -1,6 +1,9 @@
 import Head from "next/head";
 import Link from "next/link";
+import withServerAuth from "~/hooks/withServerAuth";
 import { api } from "~/utils/api";
+
+export const getServerSideProps = withServerAuth(async context => ({ props: {} }))
 
 export default function Home() {
   const hello = api.example.hello.useQuery({ text: "from tRPC" });

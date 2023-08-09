@@ -1,5 +1,5 @@
-import { initializeApp } from 'firebase/app';
-import { getAuth } from '@firebase/auth';
+import { initializeApp, getApps, getApp } from 'firebase/app';
+import { getAuth, RecaptchaVerifier, ConfirmationResult } from '@firebase/auth';
 
 const firebaseConfig = {
     apiKey: process.env.NEXT_PUBLIC_FIREBASE_APIKEY,
@@ -10,9 +10,15 @@ const firebaseConfig = {
     appId: process.env.NEXT_PUBLIC_FIREBASEAPPID,
 };
 
-const app = initializeApp(firebaseConfig);
+const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
 
 const auth = getAuth(app);
+declare global {
+    interface Window {
+        recaptchaVerifier: RecaptchaVerifier | undefined
+        confirmationResult: ConfirmationResult | undefined
+    }
+}
 
 function isFirebaseError(error: unknown): error is { code: string } {
     return (typeof error === 'object' && error !== null && 'code' in error);
