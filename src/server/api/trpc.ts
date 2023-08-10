@@ -135,7 +135,7 @@ export const protectedAdminProcedure = t.procedure.use(isAdmin);
  */
 import nookies from "nookies"
 async function getUserFromHeader(_opts: CreateNextContextOptions) {
-  const { token } = nookies.get(_opts, "token")
+  const { token } = nookies.get(_opts)
   if (!token) return null;
 
   const decodedIdToken = await adminAuth.verifyIdToken(token);

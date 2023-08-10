@@ -1,10 +1,24 @@
-"use client"
 import Head from 'next/head'
 import { useEffect, useState } from 'react'
 import FloatingInput from '~/components/input/floating'
 import { RecaptchaVerifier, signInWithPhoneNumber, ConfirmationResult } from 'firebase/auth'
 import { auth } from "~/lib/firebase"
 import { useForm, SubmitHandler } from "react-hook-form"
+import { GetServerSideProps } from 'next'
+import nookies from "nookies"
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+    const { token } = nookies.get(ctx)
+
+    if (!token) return { props: {} }
+
+    return {
+        redirect: {
+            destination: "/",
+        },
+        props: {}
+    }
+}
 
 type PhoneFormHandler = SubmitHandler<{ phone?: string }>
 type CodeFormHandler = SubmitHandler<{ code?: string }>
