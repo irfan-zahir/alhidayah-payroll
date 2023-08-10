@@ -5,8 +5,7 @@ export const createGenericContext = <T extends unknown>() => {
     const genericContext = React.createContext<T | undefined>(undefined);
 
     // Check if the value provided to the context is defined or throw an error
-    const useGenericContext = () => {
-    };
+    const useGenericContext = () => React.useContext(genericContext);
 
     return [useGenericContext, genericContext.Provider] as const;
 };

@@ -10,18 +10,21 @@ type PhoneFormHandler = SubmitHandler<{ phone?: string }>
 type CodeFormHandler = SubmitHandler<{ code?: string }>
 
 export default function Login() {
-    const [confirmCode, setConfirmCode] = useState<ConfirmationResult["confirm"] | undefined>()
+    const [confirmCode, setConfirmCode] = useState<ConfirmationResult | undefined>()
     const [countryCode, setCountryCode] = useState("6")
     const [loading, setloading] = useState(false)
 
-    const { register, handleSubmit, watch, formState: { errors } } = useForm()
+    const { register, handleSubmit, reset, formState: { errors } } = useForm()
 
     const sendOTP: PhoneFormHandler = ({ phone }) => {
         const appVerifier = window.recaptchaVerifier
         if (appVerifier) {
             if (phone !== null)
                 signInWithPhoneNumber(auth, `+${countryCode}${phone}`, appVerifier)
-                    .then(({ confirm }) => setConfirmCode(confirm))
+                    .then((confirmationResult) => {
+                        setConfirmCode(confirmationResult)
+                        reset()
+                    })
                     .catch(e => console.error("phone sign in: ", e))
         }
     }
@@ -35,8 +38,7 @@ export default function Login() {
 
 
     const verifyCode: CodeFormHandler = async ({ code }) => (confirmCode && code)
-        && await confirmCode(code)
-            .then()
+        && await confirmCode.confirm(code)
             .catch(e => {
                 console.error("verifying OTP code: ", e)
                 setConfirmCode(undefined)
@@ -62,7 +64,7 @@ export default function Login() {
 
                 <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
                     <form
-                        onSubmit={handleSubmit(confirmCode === null ? sendOTP : verifyCode)}
+                        onSubmit={handleSubmit(!confirmCode ? sendOTP : verifyCode)}
                         className="space-y-6"
                     >
                         {
@@ -71,15 +73,17 @@ export default function Login() {
 
                                     <FloatingInput
                                         id='phone'
+                                        type="tel"
                                         placeholder='Phone number'
-                                        {...register("phone")} />
+                                        {...register("phone", { required: true, minLength: 10, maxLength: 11 })} />
                                 )
                                 : (
 
                                     <FloatingInput
                                         id='code'
+                                        type='number'
                                         placeholder='6-digit OTP code'
-                                        {...register("code")} />
+                                        {...register("code", { required: true, minLength: 6, maxLength: 6 })} />
                                 )
                         }
 
@@ -87,7 +91,6 @@ export default function Login() {
                             {
                                 !confirmCode &&
                                 <button
-                                    id='send-code-button'
                                     className="flex mx-auto w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                                 >
                                     Sign in

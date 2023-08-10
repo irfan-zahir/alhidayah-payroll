@@ -43,7 +43,12 @@ model Account {
 }
 
 model Profile {
-  id Int @id @default(autoincrement())
+  id                Int     @id @default(autoincrement())
+  name              String
+  icNumber          String?
+  passportPhotoLink String?
+  kwspId            String?
+  socsoId           String?
 
   accountId Int      @unique
   account   Account? @relation(fields: [accountId], references: [id])

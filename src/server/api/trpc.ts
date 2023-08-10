@@ -50,7 +50,7 @@ const createInnerTRPCContext = (_opts: CreateContextOptions) => {
  *
  * @see https://trpc.io/docs/context
  */
-export const createTRPCContext = async(_opts: CreateNextContextOptions) => {
+export const createTRPCContext = async (_opts: CreateNextContextOptions) => {
   const user = await getUserFromHeader(_opts)
   return createInnerTRPCContext({
     user
@@ -106,9 +106,9 @@ export const publicProcedure = t.procedure;
  * Middleware to enforce a user is authenticated
  */
 const isAuthed = t.middleware((opts) => {
-    const { ctx } = opts;
-    if (!ctx.user) throw new TRPCError({ code: 'UNAUTHORIZED' });
-    return opts.next();
+  const { ctx } = opts;
+  if (!ctx.user) throw new TRPCError({ code: 'UNAUTHORIZED' });
+  return opts.next();
 });
 
 /**
@@ -120,9 +120,9 @@ export const protectedUserProcedure = t.procedure.use(isAuthed);
  * Middleware to enforce a user is an admin
  */
 const isAdmin = t.middleware((opts) => {
-    const { ctx } = opts;
-    if (ctx.user?.role !== 'admin') throw new TRPCError({ code: 'UNAUTHORIZED' });
-    return opts.next();
+  const { ctx } = opts;
+  if (ctx.user?.role !== 'admin') throw new TRPCError({ code: 'UNAUTHORIZED' });
+  return opts.next();
 });
 
 /**
@@ -133,11 +133,9 @@ export const protectedAdminProcedure = t.procedure.use(isAdmin);
 /**
  * Gets user from authorization header
  */
+import nookies from "nookies"
 async function getUserFromHeader(_opts: CreateNextContextOptions) {
-  const authorization = _opts.req.headers.authorization;
-  if (!authorization) return null;
-
-  const token = authorization.split(' ')[1];
+  const { token } = nookies.get(_opts, "token")
   if (!token) return null;
 
   const decodedIdToken = await adminAuth.verifyIdToken(token);
